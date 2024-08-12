@@ -99,7 +99,7 @@ class EmployeeController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
             'phone' => 'required|string|max:15',
             'division' => 'required|exists:divisions,id',
             'position' => 'required|string|max:255',
@@ -123,6 +123,7 @@ class EmployeeController extends Controller
             ], 404);
         }
 
+        $imagePath = $employee->image;
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = now()->format('Ymd_His') . '.' . $image->getClientOriginalExtension();
@@ -132,7 +133,7 @@ class EmployeeController extends Controller
 
         $employee->update([
             'name' => $request->name,
-            'image' => $imagePath ?? '',
+            'image' => $imagePath,
             'phone' => $request->phone,
             'division_id' => $request->division,
             'position' => $request->position,
